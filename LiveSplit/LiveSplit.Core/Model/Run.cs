@@ -75,6 +75,11 @@ namespace LiveSplit.Model
         /// </summary>
         public IList<Attempt> AttemptHistory { get; set; }
 
+        /// <summary>
+        /// Gets or sets the index of which split to start the run from.
+        /// </summary>
+        public int StartingSegmentIndex { get; set; }
+
         public AutoSplitter AutoSplitter { get; set; }
         public XmlElement AutoSplitterSettings { get; set; }
 
@@ -167,6 +172,7 @@ namespace LiveSplit.Model
                 Offset = Offset,
                 AttemptCount = AttemptCount,
                 AttemptHistory = new List<Attempt>(AttemptHistory),
+                StartingSegmentIndex = StartingSegmentIndex,
                 HasChanged = HasChanged,
                 FilePath = FilePath,
                 CustomComparisons = new List<string>(CustomComparisons),

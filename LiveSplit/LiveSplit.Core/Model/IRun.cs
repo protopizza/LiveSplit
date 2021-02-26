@@ -18,6 +18,8 @@ namespace LiveSplit.Model
         int AttemptCount { get; set; }
         IList<Attempt> AttemptHistory { get; set; }
 
+        int StartingSegmentIndex { get; set; }
+
         AutoSplitter AutoSplitter { get; set; }
         XmlElement AutoSplitterSettings { get; set; }
 

@@ -40,6 +40,11 @@ namespace LiveSplit.Model
             {
                 CurrentState.CurrentPhase = TimerPhase.Running;
                 CurrentState.CurrentSplitIndex = 0;
+                if (CurrentState.Run.StartingSegmentIndex != 0) {
+                    FillInSplitHistory(CurrentState.Run.StartingSegmentIndex);
+                    CurrentState.CurrentSplitIndex = CurrentState.Run.StartingSegmentIndex;
+                }
+                
                 CurrentState.AttemptStarted = TimeStamp.CurrentDateTime;
                 CurrentState.AdjustedStartTime = CurrentState.StartTimeWithOffset = TimeStamp.Now - CurrentState.Run.Offset;
                 CurrentState.StartTime = TimeStamp.Now;
@@ -290,6 +295,17 @@ namespace LiveSplit.Model
             foreach (var current in CurrentState.Run)
                 current.PersonalBestSplitTime = current.SplitTime;
             CurrentState.Run.Metadata.RunID = null;
+        }
+
+        private void FillInSplitHistory(int fillInOffSet)
+        {
+            for (int i = 0; i <= fillInOffSet - 1; i++) {
+                var splitTime = new Time();
+                TimeSpan span = CurrentState.Run[i].PersonalBestSplitTime.RealTime.GetValueOrDefault(new TimeSpan(0));
+                splitTime.RealTime = span;
+                splitTime.GameTime = span;
+                CurrentState.Run[i].SplitTime = splitTime;
+            }
         }
     }
 }
