@@ -40,9 +40,13 @@ namespace LiveSplit.Model
             {
                 CurrentState.CurrentPhase = TimerPhase.Running;
                 CurrentState.CurrentSplitIndex = 0;
-                if (CurrentState.Run.StartingSegmentIndex != 0) {
-                    FillInSplitHistory(CurrentState.Run.StartingSegmentIndex);
-                    CurrentState.CurrentSplitIndex = CurrentState.Run.StartingSegmentIndex;
+                if (CurrentState.Run.StartingSegmentIndex != 0 || CurrentState.Run.AutoSegmentIndex) {
+                    int targetSegmentIndex = CurrentState.Run.StartingSegmentIndex;
+                    if (CurrentState.Run.AutoSegmentIndex) {
+                        targetSegmentIndex = GetIndexOfFirstUntimedSegment();
+                    }
+                    FillInSplitHistory(targetSegmentIndex);
+                    CurrentState.CurrentSplitIndex = targetSegmentIndex;
                 }
                 
                 CurrentState.AttemptStarted = TimeStamp.CurrentDateTime;
@@ -306,6 +310,19 @@ namespace LiveSplit.Model
                 splitTime.GameTime = span;
                 CurrentState.Run[i].SplitTime = splitTime;
             }
+        }
+
+        private int GetIndexOfFirstUntimedSegment()
+        {
+            int returnIndex = 0;
+            for (int i = 0; i < CurrentState.Run.Count(); i++) { 
+                if (CurrentState.Run[i].PersonalBestSplitTime.Equals(default(Time))) {
+                    returnIndex = i;
+                    break;
+                }
+            }
+
+            return returnIndex;
         }
     }
 }

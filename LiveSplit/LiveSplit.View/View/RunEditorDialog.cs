@@ -125,6 +125,11 @@ namespace LiveSplit.View
             get { return Run.StartingSegmentIndex; }
             set { Run.StartingSegmentIndex = Math.Min(Math.Max(0, value), (int) Run.Count - 1); RaiseRunEdited(); }
         }
+        public bool AutoSegmentIndex
+        {
+            get { return Run.AutoSegmentIndex; }
+            set { Run.AutoSegmentIndex = value; RaiseRunEdited(); }
+        }
         private class ParsingResults
         {
             public bool Parsed { get; set; }
@@ -211,6 +216,7 @@ namespace LiveSplit.View
             tbxTimeOffset.DataBindings.Add("Text", this, "Offset");
             tbxAttempts.DataBindings.Add("Text", this, "AttemptCount");
             tbxSegmentIndex.DataBindings.Add("Text", this, "StartingSegmentIndex");
+            checkBoxAutoSegmentIndex.DataBindings.Add("Checked", this, "AutoSegmentIndex");
 
             picGameIcon.Image = GameIcon;
             removeIconToolStripMenuItem.Enabled = state.Run.GameIcon != null;

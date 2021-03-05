@@ -80,6 +80,8 @@ namespace LiveSplit.Model
         /// </summary>
         public int StartingSegmentIndex { get; set; }
 
+        public bool AutoSegmentIndex { get; set; }
+
         public AutoSplitter AutoSplitter { get; set; }
         public XmlElement AutoSplitterSettings { get; set; }
 
@@ -173,6 +175,7 @@ namespace LiveSplit.Model
                 AttemptCount = AttemptCount,
                 AttemptHistory = new List<Attempt>(AttemptHistory),
                 StartingSegmentIndex = StartingSegmentIndex,
+                AutoSegmentIndex = AutoSegmentIndex,
                 HasChanged = HasChanged,
                 FilePath = FilePath,
                 CustomComparisons = new List<string>(CustomComparisons),

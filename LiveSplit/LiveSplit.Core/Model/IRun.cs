@@ -20,6 +20,8 @@ namespace LiveSplit.Model
 
         int StartingSegmentIndex { get; set; }
 
+        bool AutoSegmentIndex { get; set; }
+
         AutoSplitter AutoSplitter { get; set; }
         XmlElement AutoSplitterSettings { get; set; }
 

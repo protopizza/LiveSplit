@@ -64,6 +64,7 @@
             this.btnActivate = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.tbxSegmentIndex = new System.Windows.Forms.TextBox();
+            this.checkBoxAutoSegmentIndex = new System.Windows.Forms.CheckBox();
             this.RemoveIconMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setIconToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadBoxartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -158,6 +159,7 @@
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 5, 5);
             this.tableLayoutPanel1.Controls.Add(this.label5, 1, 4);
             this.tableLayoutPanel1.Controls.Add(this.tbxSegmentIndex, 4, 4);
+            this.tableLayoutPanel1.Controls.Add(this.checkBoxAutoSegmentIndex, 5, 4);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -562,6 +564,19 @@
             this.tbxSegmentIndex.Size = new System.Drawing.Size(121, 20);
             this.tbxSegmentIndex.TabIndex = 22;
             // 
+            // checkBoxAutoSegmentIndex
+            // 
+            this.checkBoxAutoSegmentIndex.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.checkBoxAutoSegmentIndex.AutoSize = true;
+            this.checkBoxAutoSegmentIndex.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.tableLayoutPanel1.SetColumnSpan(this.checkBoxAutoSegmentIndex, 2);
+            this.checkBoxAutoSegmentIndex.Location = new System.Drawing.Point(429, 119);
+            this.checkBoxAutoSegmentIndex.Name = "checkBoxAutoSegmentIndex";
+            this.checkBoxAutoSegmentIndex.Size = new System.Drawing.Size(122, 17);
+            this.checkBoxAutoSegmentIndex.TabIndex = 24;
+            this.checkBoxAutoSegmentIndex.Text = "Auto Segment Index";
+            this.checkBoxAutoSegmentIndex.UseVisualStyleBackColor = true;
+            // 
             // RemoveIconMenu
             // 
             this.RemoveIconMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -756,5 +771,6 @@
         private System.Windows.Forms.ToolStripMenuItem downloadIconToolStripMenuItem;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox tbxSegmentIndex;
+        private System.Windows.Forms.CheckBox checkBoxAutoSegmentIndex;
     }
 }
