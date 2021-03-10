@@ -130,6 +130,9 @@ namespace LiveSplit.View
             get { return Run.AutoSegmentIndex; }
             set { Run.AutoSegmentIndex = value; RaiseRunEdited(); }
         }
+
+        public int NumTotalDesiredSegments { get; set; }
+
         private class ParsingResults
         {
             public bool Parsed { get; set; }
@@ -171,6 +174,7 @@ namespace LiveSplit.View
             runGrid.CellValidating += runGrid_CellValidating;
             runGrid.CellEndEdit += runGrid_CellEndEdit;
             runGrid.SelectionChanged += runGrid_SelectionChanged;
+            NumTotalDesiredSegments = 0;
 
             var iconColumn = new DataGridViewImageColumn() { ImageLayout = DataGridViewImageCellLayout.Zoom };
             iconColumn.Name = "Icon";
@@ -217,6 +221,7 @@ namespace LiveSplit.View
             tbxAttempts.DataBindings.Add("Text", this, "AttemptCount");
             tbxSegmentIndex.DataBindings.Add("Text", this, "StartingSegmentIndex");
             checkBoxAutoSegmentIndex.DataBindings.Add("Checked", this, "AutoSegmentIndex");
+            numTotalDesiredSegments.DataBindings.Add("Value", this, "NumTotalDesiredSegments");
 
             picGameIcon.Image = GameIcon;
             removeIconToolStripMenuItem.Enabled = state.Run.GameIcon != null;
@@ -799,6 +804,27 @@ namespace LiveSplit.View
             Fix();
 
             SegmentRemovedOrAdded(null, null);
+        }
+
+        private void btnPopulateSegments_Click(object sender, EventArgs e)
+        {
+            int neededSegmentCount = NumTotalDesiredSegments - Run.Count;
+            if (neededSegmentCount > 0)
+            {
+                for (int i = 0; i < neededSegmentCount; i++)
+                {
+                    var newSegment = new Segment((Run.Count + 1).ToString());
+                    SegmentList.Insert(Run.Count, newSegment);
+                }
+
+                runGrid.ClearSelection();
+                runGrid.CurrentCell = runGrid.Rows[NumTotalDesiredSegments - 1].Cells[runGrid.CurrentCell.ColumnIndex];
+                runGrid.CurrentCell.Selected = true;
+
+                Fix();
+
+                SegmentRemovedOrAdded(null, null);
+            }
         }
 
         private void runGrid_KeyDown(object sender, KeyEventArgs e)
