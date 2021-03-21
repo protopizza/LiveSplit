@@ -578,6 +578,8 @@
             this.checkBoxAutoSegmentIndex.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.checkBoxAutoSegmentIndex.AutoSize = true;
             this.checkBoxAutoSegmentIndex.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.checkBoxAutoSegmentIndex.Checked = true;
+            this.checkBoxAutoSegmentIndex.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tableLayoutPanel1.SetColumnSpan(this.checkBoxAutoSegmentIndex, 2);
             this.checkBoxAutoSegmentIndex.Location = new System.Drawing.Point(429, 119);
             this.checkBoxAutoSegmentIndex.Name = "checkBoxAutoSegmentIndex";

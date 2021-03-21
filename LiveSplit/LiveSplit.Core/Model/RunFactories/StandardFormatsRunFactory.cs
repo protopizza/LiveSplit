@@ -120,7 +120,7 @@ namespace LiveSplit.Model.RunFactories
                 // Don't parse StartingSegmentIndex
                 run.StartingSegmentIndex = 0; // (int)lscRun.StartingSegmentIndex();
                 // Don't parse AutoSegmentIndex
-                run.AutoSegmentIndex = false;
+                run.AutoSegmentIndex = true;
 
                 var attemptsCount = lscRun.AttemptHistoryLen();
                 for (var i = 0; i < attemptsCount; ++i)
