@@ -4,9 +4,9 @@ LiveSplit is a timer program for speedrunners that is both easy to use and full 
 
 This is a fork of LiveSplit that adds functionality to start at any desired split with a desired initial time. This was designed in mind for usage by SMW/Kaizo players. In conjunction with my [ExitCounter component](https://github.com/protopizza/LiveSplit.ExitCounter), it makes timing your progress of a first playthrough of any game easy to manage over multiple gaming sessions. It's how I track my time over on my stream at https://www.twitch.tv/protopizza.
 
-<img src="https://raw.githubusercontent.com/LiveSplit/LiveSplit/master/LiveSplit/Resources/KaizoSplit/Guide-1.png"/>
+<img src="https://raw.githubusercontent.com/protopizza/LiveSplit/master/LiveSplit/Resources/KaizoSplit/Guide-1.png"/>
 
-<img src="https://raw.githubusercontent.com/LiveSplit/LiveSplit/master/LiveSplit/Resources/KaizoSplit/Guide-2.png"/>
+<img src="https://raw.githubusercontent.com/protopizza/LiveSplit/master/LiveSplit/Resources/KaizoSplit/Guide-2.png"/>
 
 You can see the main project and documentation for LiveSplit [here](https://github.com/LiveSplit/LiveSplit).
 
@@ -31,16 +31,11 @@ Further details of the features below.
 #### Features
 
 1. Automatically setting your start timer. This is useful for when playing across multiple sessions, and you want to start the timer of your next session at the time your previous session left off at, automatically, by just checking `Auto Start Timer` in the Splits Editor (defaults to checked).
-
-You can also uncheck this in order to start at any arbitrary total time, in case you want to start with already 30 minutes on the clock for a given exit.
-
-2. Starting your run from a segment in the middle of your splits. This is useful to keep the past segment history maintained over the course of your play. If you check `Auto Segment Index`, this automatically starts you from the latest split without a recorded split time (defaults to checked).
-
-**Note:** The first segment is 0, not 1. The second one is 1, third is 2, etc.
-
-3. For playing games with a lot of exits, it's annoying to have to set up a ton of segments for each. (JUMP½ has 130!) This is made easy by entering in a value for `Total Desired Segments`, then hitting the `Populate Segments` button.
-
-4. Settings based around the `Auto Start Timer`, `Auto Segment Index`, and `Start Segment Index` aren't saved across closing and opening the program, as they don't get stored into your actual splits files. This allows your splits files to be compatible with the main version of LiveSplit.
+    1. You can also uncheck this in order to start at any arbitrary total time, in case you want to start with already 30 minutes on the clock for a given exit.
+1. Starting your run from a segment in the middle of your splits. This is useful to keep the past segment history maintained over the course of your play. If you check `Auto Segment Index`, this automatically starts you from the latest split without a recorded split time (defaults to checked).
+    1. **Note:** The first segment is 0, not 1. The second one is 1, third is 2, etc.
+1. For playing games with a lot of exits, it's annoying to have to set up a ton of segments for each. (JUMP½ has 130!) This is made easy by entering in a value for `Total Desired Segments`, then hitting the `Populate Segments` button.
+1. Settings based around the `Auto Start Timer`, `Auto Segment Index`, and `Start Segment Index` aren't saved across closing and opening the program, as they don't get stored into your actual splits files. This allows your splits files to be compatible with the main version of LiveSplit.
 
 ## Compiling
 
