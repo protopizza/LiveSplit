@@ -18,7 +18,7 @@ Download the .zip file from the releases and then extract it to get this LiveSpl
 
 If you want, you can take only the files `LiveSplit.exe`, `LiveSplit.Core.dll`, and `LiveSplit.View.dll` and replace them in your existing LiveSplit installation, which needs to be version `1.8.0`.
 
-You may also want to get the `ExitCounter` component [here](https://github.com/protopizza/LiveSplit.ExitCounter), which just needs you to place the `LiveSplit.ExitCounter.dll` within the `Components` directory of your LiveSplit folder.
+You may also want to get the `ExitCounter` component [here](https://github.com/protopizza/LiveSplit.ExitCounter), which has its own documentation.
 
 ### Usage
 
@@ -28,13 +28,17 @@ I normally then go back and add in the names of the Segments based on the exits 
 
 Further details of the features below.
 
-#### Features
+### Features
 
 1. Automatically setting your start timer. This is useful for when playing across multiple sessions, and you want to start the timer of your next session at the time your previous session left off at, automatically, by just checking `Auto Start Timer` in the Splits Editor (defaults to checked).
     1. You can also uncheck this in order to start at any arbitrary total time, in case you want to start with already 30 minutes on the clock for a given exit.
 1. Starting your run from a segment in the middle of your splits. This is useful to keep the past segment history maintained over the course of your play. If you check `Auto Segment Index`, this automatically starts you from the latest split without a recorded split time (defaults to checked).
     1. **Note:** The first segment is 0, not 1. The second one is 1, third is 2, etc.
 1. For playing games with a lot of exits, it's annoying to have to set up a ton of segments for each. (JUMP½ has 130!) This is made easy by entering in a value for `Total Desired Segments`, then hitting the `Populate Segments` button.
+
+### Other Notes
+
+1. This only works using the "Real Time" method of timing.
 1. Settings based around the `Auto Start Timer`, `Auto Segment Index`, and `Start Segment Index` aren't saved across closing and opening the program, as they don't get stored into your actual splits files. This allows your splits files to be compatible with the main version of LiveSplit.
 
 ## Compiling

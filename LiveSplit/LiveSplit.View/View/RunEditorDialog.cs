@@ -420,7 +420,7 @@ namespace LiveSplit.View
                 return new TimeSpan();
             }
 
-            return CurrentState.Run[indexOfFirstUntimedSegment - 1].PersonalBestSplitTime[SelectedMethod].GetValueOrDefault(new TimeSpan());
+            return CurrentState.Run[indexOfFirstUntimedSegment - 1].PersonalBestSplitTime.RealTime.GetValueOrDefault(new TimeSpan());
         }
 
         void runGrid_SelectionChanged(object sender, EventArgs e)
@@ -1134,6 +1134,8 @@ namespace LiveSplit.View
                 Run.Metadata.RunID = null;
                 PreviousPersonalBestTime = Run.Last().PersonalBestSplitTime;
             }
+            checkBoxAutoStartTimer_CheckedChanged(null, null);
+            checkBoxAutoSegmentIndex_CheckedChanged(null, null);
             RaiseRunEdited();
         }
 
