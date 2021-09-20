@@ -1,49 +1,46 @@
 ﻿<h1> <img src="https://raw.githubusercontent.com/LiveSplit/LiveSplit/master/LiveSplit/Resources/Icon.png" alt="LiveSplit" height="42" width="45" align="top"/> LiveSplit</h1>
 
-[![GitHub release](https://img.shields.io/github/release/LiveSplit/LiveSplit.svg)](https://github.com/LiveSplit/LiveSplit/releases/latest)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/LiveSplit/LiveSplit/master/LICENSE)
-[![Build Status](https://github.com/LiveSplit/LiveSplit/workflows/CI/badge.svg)](https://github.com/LiveSplit/LiveSplit/actions)
-[![GitHub issues](https://img.shields.io/github/issues/LiveSplit/LiveSplit.svg?style=plastic)](https://github.com/LiveSplit/LiveSplit/issues)
-
 LiveSplit is a timer program for speedrunners that is both easy to use and full of features.
-<p align="center">
-  <img src="https://raw.githubusercontent.com/LiveSplit/LiveSplit.github.io/master/images/livesplittimer.png" alt="LiveSplit"/>
-</p>
 
-## Features
+This is a fork of LiveSplit that adds functionality to start at any desired split with a desired initial time. This was designed in mind for usage by SMW/Kaizo players. In conjunction with my [ExitCounter component](https://github.com/protopizza/LiveSplit.ExitCounter), it makes timing your progress of a first playthrough of any game easy to manage over multiple gaming sessions. It's how I track my time over on my stream at https://www.twitch.tv/protopizza.
 
-**Speedrun.com Integration:** [Speedrun.com](http://speedrun.com) is fully integrated into LiveSplit. You can browse their leaderboards, download splits, and even submit your own runs directly from LiveSplit. You can also show the World Records for the games you run with the World Record Component.
+<img src="https://raw.githubusercontent.com/LiveSplit/LiveSplit/master/LiveSplit/Resources/KaizoSplit/Guide-1.png"/>
 
-**Accurate Timing:** LiveSplit automatically synchronizes with an atomic clock over the Internet to estimate inaccuracies of the local timer in the PC. LiveSplit's timer automatically adjusts the local timer to fix those inaccuracies.
+<img src="https://raw.githubusercontent.com/LiveSplit/LiveSplit/master/LiveSplit/Resources/KaizoSplit/Guide-2.png"/>
 
-**Game Time and Auto Splitting:** LiveSplit will automatically detect if Game Time and/or Auto Splitting is available for a game and let you activate it in the Splits Editor. Game Time is automatically read directly from an emulator or PC game, and you can use it by switching to Game Time under Compare Against.
+You can see the main project and documentation for LiveSplit [here](https://github.com/LiveSplit/LiveSplit).
 
-**Video Component:** With the Video Component, you can play a video from a local file alongside your run. The video will start when you start your run and stop whenever you reset. You can also specify at what point the video should start at.
+## How-To
 
-**Racing:** In LiveSplit, you are able to start and join races on [SpeedRunsLive](http://www.speedrunslive.com/) or [racetime.gg](https://racetime.gg/) within LiveSplit itself. The timer automatically starts when the race begins and automatically writes ``.done`` whenever you complete the race. Also, you are able to compare your current run with the other runners during the race, as long as they use LiveSplit as well.
+### Setup
 
-**Comparisons:** In LiveSplit, you are able to dynamically switch between multiple comparisons, even mid-run. You can either compare your run to comparisons that you define yourself or compare it to multiple automatically generated comparisons, like your Sum of Best Segments or your average run. While racing on [SpeedRunsLive](http://www.speedrunslive.com/), comparisons for the other runners are automatically generated as well.
+Download the .zip file from the releases and then extract it to get this LiveSplit fork.
 
-**Layout System:** Users can modify every part of LiveSplit’s appearance using Layouts. Every user has the ability to add or remove parts along with being able to rearrange and customize each part of LiveSplit. You can even use your own background images.
+If you want, you can take only the files `LiveSplit.exe`, `LiveSplit.Core.dll`, and `LiveSplit.View.dll` and replace them in your existing LiveSplit installation, which needs to be version `1.8.0`.
 
-**Dynamic Resizing:** LiveSplit can be resized to any size so that it looks good on stream. As LiveSplit’s size is changed, all of its parts are automatically scaled up in order to preserve its appearance.
+You may also want to get the `ExitCounter` component [here](https://github.com/protopizza/LiveSplit.ExitCounter), which just needs you to place the `LiveSplit.ExitCounter.dll` within the `Components` directory of your LiveSplit folder.
 
-**Sharing Runs:** Any run can be shared to websites such as [Speedrun.com](http://speedrun.com/), [Congratsio](http://www.congratsio.com/) and [Twitter](https://twitter.com/). Splits can also be distributed using [splits i/o](https://splits.io/) and imported from a URL. You can also share a screenshot of your splits to [Imgur](http://imgur.com/) or save it as a file. Your [Twitch](http://www.twitch.tv/) title can be updated as well based on the game you are playing.
+### Usage
 
-**Component Development:** Anyone can develop their own components that can easily be shared and used with LiveSplit. Additional downloadable components can be found in the [Components Section](https://livesplit.org/components/).
+In normal usage, you'll want to keep `Auto Start Timer` and `Auto Segment Index` checked within the Splits Editor. When you are done playing for any particular session, **pause** LiveSplit, then right-click on LiveSplit and hit `Save Splits`. You will be prompted to save it as a Personal Best, for which you should click `Yes`.
 
-## Contributing
+I normally then go back and add in the names of the Segments based on the exits I played.
 
-We need your help!
+Further details of the features below.
 
-You can browse the [Issues](https://github.com/LiveSplit/LiveSplit/issues) to find good issues to get started with. Select one that is not already done or in progress, assign yourself, and drag it over to "In Progress".
+#### Features
 
- 1. [Fork](https://github.com/LiveSplit/LiveSplit/fork) the project
- 2. Clone your forked repo: `git clone https://github.com/YourUsername/LiveSplit.git`
- 3. Create your feature/bugfix branch: `git checkout -b new-feature`
- 4. Commit your changes to your new branch: `git commit -am 'Add a new feature'`
- 5. Push to the branch: `git push origin new-feature`
- 6. Create a new Pull Request!
+1. Automatically setting your start timer. This is useful for when playing across multiple sessions, and you want to start the timer of your next session at the time your previous session left off at, automatically, by just checking `Auto Start Timer` in the Splits Editor (defaults to checked).
+
+You can also uncheck this in order to start at any arbitrary total time, in case you want to start with already 30 minutes on the clock for a given exit.
+
+2. Starting your run from a segment in the middle of your splits. This is useful to keep the past segment history maintained over the course of your play. If you check `Auto Segment Index`, this automatically starts you from the latest split without a recorded split time (defaults to checked).
+
+**Note:** The first segment is 0, not 1. The second one is 1, third is 2, etc.
+
+3. For playing games with a lot of exits, it's annoying to have to set up a ton of segments for each. (JUMP½ has 130!) This is made easy by entering in a value for `Total Desired Segments`, then hitting the `Populate Segments` button.
+
+4. Settings based around the `Auto Start Timer`, `Auto Segment Index`, and `Start Segment Index` aren't saved across closing and opening the program, as they don't get stored into your actual splits files. This allows your splits files to be compatible with the main version of LiveSplit.
 
 ## Compiling
 
@@ -52,18 +49,6 @@ LiveSplit is written in C# 7 with Visual Studio and uses .NET Framework 4.6.1. T
  - Visual Studio 2017
 
 Simply open the project with Visual Studio and it should be able to compile and run without any further configuration.
-
-## Common Compiling Issues
-1. Could not build Codaxy.Xlio due to sgen.exe not being found. Open LiveSplit\\Libs\\xlio\\Source\\Codaxy.Xlio\\Codaxy.Xlio.csproj in order to edit where it looks for this path. Look for &lt;SGen...&gt; where it defines the attribute "ToolPath". Look on your computer to find the proper path. It is typically down some path such as "C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\x.xA...". Find the version you want to use and bin folder with sgen.exe in it and replace the path in the .csproj file.
-2. No submodules pulled in when you fork/clone the repo which causes the project not to build. There are two ways to remedy this:
- - Cloning for the first time: `git clone --recursive git://repo/repo.git`
- - If already cloned, execute this in the root directory: `git submodule update --init --recursive`
-
-## Auto Splitters
-
-The documentation for how to develop, test, and submit an Auto Splitter can be found here:
-
-[Auto Splitters Documentation](https://github.com/LiveSplit/LiveSplit.AutoSplitters/blob/master/README.md)
 
 ## License
 
