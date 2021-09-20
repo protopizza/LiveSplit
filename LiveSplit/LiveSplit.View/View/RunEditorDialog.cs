@@ -50,8 +50,6 @@ namespace LiveSplit.View
             set { tabControl.SelectTab(value.ToString()); }
         }
 
-        public int CurrentSplitIndexOffset { get; set; }
-
         public bool AllowChangingSegments { get; set; }
 
         public event EventHandler RunEdited;
@@ -120,11 +118,18 @@ namespace LiveSplit.View
             set { Run.AttemptCount = Math.Max(0, value); RaiseRunEdited(); }
         }
 
+        public bool AutoStartTimer
+        {
+            get { return Run.AutoStartTimer; }
+            set { Run.AutoStartTimer = value; RaiseRunEdited(); }
+        }
+
         public int StartingSegmentIndex
         {
             get { return Run.StartingSegmentIndex; }
             set { Run.StartingSegmentIndex = Math.Min(Math.Max(0, value), (int) Run.Count - 1); RaiseRunEdited(); }
         }
+
         public bool AutoSegmentIndex
         {
             get { return Run.AutoSegmentIndex; }
@@ -154,7 +159,6 @@ namespace LiveSplit.View
             PreviousPersonalBestTime = Run.Last().PersonalBestSplitTime;
             metadataControl.Metadata = Run.Metadata;
             metadataControl.MetadataChanged += metadataControl_MetadataChanged;
-            CurrentSplitIndexOffset = 0;
             AllowChangingSegments = false;
             ImagesToDispose = new List<Image>();
             SegmentTimeList = new List<TimeSpan?>();
@@ -174,6 +178,8 @@ namespace LiveSplit.View
             runGrid.CellValidating += runGrid_CellValidating;
             runGrid.CellEndEdit += runGrid_CellEndEdit;
             runGrid.SelectionChanged += runGrid_SelectionChanged;
+            checkBoxAutoStartTimer_CheckedChanged(null, null);
+            checkBoxAutoSegmentIndex_CheckedChanged(null, null);
             NumTotalDesiredSegments = 0;
 
             var iconColumn = new DataGridViewImageColumn() { ImageLayout = DataGridViewImageCellLayout.Zoom };
@@ -219,6 +225,7 @@ namespace LiveSplit.View
             cbxRunCategory.DataBindings.Add("Text", this, "CategoryName");
             tbxTimeOffset.DataBindings.Add("Text", this, "Offset");
             tbxAttempts.DataBindings.Add("Text", this, "AttemptCount");
+            checkBoxAutoStartTimer.DataBindings.Add("Checked", this, "AutoStartTimer");
             tbxSegmentIndex.DataBindings.Add("Text", this, "StartingSegmentIndex");
             checkBoxAutoSegmentIndex.DataBindings.Add("Checked", this, "AutoSegmentIndex");
             numTotalDesiredSegments.DataBindings.Add("Value", this, "NumTotalDesiredSegments");
@@ -360,6 +367,60 @@ namespace LiveSplit.View
                     Log.Error(ex);
                 }
             });
+        }
+
+        void checkBoxAutoStartTimer_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxAutoStartTimer.Checked) {
+                tbxTimeOffset.ReadOnly = true;
+                tbxTimeOffset.Text = TimeFormatter.Format(GetLastSplitTime());
+                Offset = TimeFormatter.Format(GetLastSplitTime());
+            }
+            else
+            {
+                tbxTimeOffset.ReadOnly = false;
+            }
+            RaiseRunEdited();
+        }
+
+        void checkBoxAutoSegmentIndex_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxAutoSegmentIndex.Checked) {
+                tbxSegmentIndex.ReadOnly = true;
+                tbxSegmentIndex.Text = GetIndexOfFirstUntimedSegment().ToString();
+                StartingSegmentIndex = GetIndexOfFirstUntimedSegment();
+            }
+            else
+            {
+                tbxSegmentIndex.ReadOnly = false;
+            }
+            RaiseRunEdited();
+        }
+
+        private int GetIndexOfFirstUntimedSegment()
+        {
+            int returnIndex = 0;
+            for (int i = 0; i < CurrentState.Run.Count(); i++)
+            {
+                if (CurrentState.Run[i].PersonalBestSplitTime.Equals(default(Time)))
+                {
+                    returnIndex = i;
+                    break;
+                }
+            }
+
+            return returnIndex;
+        }
+
+        private TimeSpan GetLastSplitTime()
+        {
+            int indexOfFirstUntimedSegment = GetIndexOfFirstUntimedSegment();
+            if (indexOfFirstUntimedSegment < 1)
+            {
+                return new TimeSpan();
+            }
+
+            return CurrentState.Run[indexOfFirstUntimedSegment - 1].PersonalBestSplitTime[SelectedMethod].GetValueOrDefault(new TimeSpan());
         }
 
         void runGrid_SelectionChanged(object sender, EventArgs e)

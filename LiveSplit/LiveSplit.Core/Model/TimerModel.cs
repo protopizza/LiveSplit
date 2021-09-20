@@ -40,13 +40,9 @@ namespace LiveSplit.Model
             {
                 CurrentState.CurrentPhase = TimerPhase.Running;
                 CurrentState.CurrentSplitIndex = 0;
-                if (CurrentState.Run.StartingSegmentIndex != 0 || CurrentState.Run.AutoSegmentIndex) {
-                    int targetSegmentIndex = CurrentState.Run.StartingSegmentIndex;
-                    if (CurrentState.Run.AutoSegmentIndex) {
-                        targetSegmentIndex = GetIndexOfFirstUntimedSegment();
-                    }
-                    FillInSplitHistory(targetSegmentIndex);
-                    CurrentState.CurrentSplitIndex = targetSegmentIndex;
+                if (CurrentState.Run.StartingSegmentIndex != 0) {
+                    FillInSplitHistory(CurrentState.Run.StartingSegmentIndex);
+                    CurrentState.CurrentSplitIndex = CurrentState.Run.StartingSegmentIndex;
                 }
                 
                 CurrentState.AttemptStarted = TimeStamp.CurrentDateTime;
@@ -304,25 +300,14 @@ namespace LiveSplit.Model
         private void FillInSplitHistory(int fillInOffSet)
         {
             for (int i = 0; i <= fillInOffSet - 1; i++) {
-                var splitTime = new Time();
-                TimeSpan span = CurrentState.Run[i].PersonalBestSplitTime.RealTime.GetValueOrDefault(new TimeSpan(0));
-                splitTime.RealTime = span;
-                splitTime.GameTime = span;
-                CurrentState.Run[i].SplitTime = splitTime;
+                var fillingSplitTime = new Time();
+                var existingTime = CurrentState.Run[i].PersonalBestSplitTime;
+
+                fillingSplitTime.RealTime = existingTime.RealTime.GetValueOrDefault(new TimeSpan());
+                fillingSplitTime.GameTime = existingTime.GameTime.GetValueOrDefault(new TimeSpan());
+                CurrentState.Run[i].SplitTime = fillingSplitTime;
             }
         }
 
-        private int GetIndexOfFirstUntimedSegment()
-        {
-            int returnIndex = 0;
-            for (int i = 0; i < CurrentState.Run.Count(); i++) { 
-                if (CurrentState.Run[i].PersonalBestSplitTime.Equals(default(Time))) {
-                    returnIndex = i;
-                    break;
-                }
-            }
-
-            return returnIndex;
-        }
     }
 }

@@ -18,6 +18,8 @@ namespace LiveSplit.Model
         int AttemptCount { get; set; }
         IList<Attempt> AttemptHistory { get; set; }
 
+        bool AutoStartTimer { get; set; }
+
         int StartingSegmentIndex { get; set; }
 
         bool AutoSegmentIndex { get; set; }

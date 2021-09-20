@@ -75,6 +75,8 @@ namespace LiveSplit.Model
         /// </summary>
         public IList<Attempt> AttemptHistory { get; set; }
 
+        public bool AutoStartTimer { get; set; }
+
         /// <summary>
         /// Gets or sets the index of which split to start the run from.
         /// </summary>
@@ -174,6 +176,7 @@ namespace LiveSplit.Model
                 Offset = Offset,
                 AttemptCount = AttemptCount,
                 AttemptHistory = new List<Attempt>(AttemptHistory),
+                AutoStartTimer = AutoStartTimer,
                 StartingSegmentIndex = StartingSegmentIndex,
                 AutoSegmentIndex = AutoSegmentIndex,
                 HasChanged = HasChanged,

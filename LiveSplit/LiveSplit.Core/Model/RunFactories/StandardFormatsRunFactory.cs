@@ -117,9 +117,9 @@ namespace LiveSplit.Model.RunFactories
                 run.CategoryName = lscRun.CategoryName();
                 run.Offset = ParseTimeSpan(lscRun.Offset());
                 run.AttemptCount = (int)lscRun.AttemptCount();
-                // Don't parse StartingSegmentIndex
-                run.StartingSegmentIndex = 0; // (int)lscRun.StartingSegmentIndex();
-                // Don't parse AutoSegmentIndex
+                // Don't parse these so that run files are compatible with main LiveSplit.
+                run.AutoStartTimer = true;
+                run.StartingSegmentIndex = 0;
                 run.AutoSegmentIndex = true;
 
                 var attemptsCount = lscRun.AttemptHistoryLen();
