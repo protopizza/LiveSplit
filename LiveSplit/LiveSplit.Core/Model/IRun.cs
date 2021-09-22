@@ -35,6 +35,10 @@ namespace LiveSplit.Model
 
         bool HasChanged { get; set; }
         string FilePath { get; set; }
+
+        int GetIndexOfFirstUntimedSegment();
+
+        TimeSpan GetSplitTimeOfLastTimedSegment();
     }
 
     public static class RunExtensions

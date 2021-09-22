@@ -40,7 +40,7 @@ namespace LiveSplit.Model
             get { return gameName; }
             set
             {
-                gameName = value; 
+                gameName = value;
                 Metadata.Refresh();
                 TriggerPropertyChanged("GameName");
             }
@@ -190,5 +190,31 @@ namespace LiveSplit.Model
         }
 
         object ICloneable.Clone() => Clone();
+
+        public int GetIndexOfFirstUntimedSegment()
+        {
+            int returnIndex = 0;
+            for (int i = 0; i < Count; i++)
+            {
+                if (this[i].PersonalBestSplitTime.Equals(default(Time)))
+                {
+                    returnIndex = i;
+                    break;
+                }
+            }
+
+            return returnIndex;
+        }
+
+        public TimeSpan GetSplitTimeOfLastTimedSegment()
+        {
+            int indexOfFirstUntimedSegment = GetIndexOfFirstUntimedSegment();
+            if (indexOfFirstUntimedSegment < 1)
+            {
+                return new TimeSpan();
+            }
+
+            return this[indexOfFirstUntimedSegment - 1].PersonalBestSplitTime.RealTime.GetValueOrDefault(new TimeSpan());
+        }
     }
 }

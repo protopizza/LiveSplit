@@ -39,12 +39,9 @@ namespace LiveSplit.Model
             if (CurrentState.CurrentPhase == TimerPhase.NotRunning)
             {
                 CurrentState.CurrentPhase = TimerPhase.Running;
-                CurrentState.CurrentSplitIndex = 0;
-                if (CurrentState.Run.StartingSegmentIndex != 0) {
-                    FillInSplitHistory(CurrentState.Run.StartingSegmentIndex);
-                    CurrentState.CurrentSplitIndex = CurrentState.Run.StartingSegmentIndex;
-                }
-                
+
+                CheckAutoFieldsAndStartingSegmentIndex();
+
                 CurrentState.AttemptStarted = TimeStamp.CurrentDateTime;
                 CurrentState.AdjustedStartTime = CurrentState.StartTimeWithOffset = TimeStamp.Now - CurrentState.Run.Offset;
                 CurrentState.StartTime = TimeStamp.Now;
@@ -143,6 +140,8 @@ namespace LiveSplit.Model
             {
                 split.SplitTime = default(Time);
             }
+
+            CheckAutoFieldsAndStartingSegmentIndex();
 
             OnReset?.Invoke(this, oldPhase);
 
@@ -301,11 +300,30 @@ namespace LiveSplit.Model
         {
             for (int i = 0; i <= fillInOffSet - 1; i++) {
                 var fillingSplitTime = new Time();
-                var existingTime = CurrentState.Run[i].PersonalBestSplitTime;
+                CurrentState.Run[i].SplitTime = new Time(CurrentState.Run[i].PersonalBestSplitTime.RealTime.GetValueOrDefault(new TimeSpan()), null);
+            }
+        }
 
-                fillingSplitTime.RealTime = existingTime.RealTime.GetValueOrDefault(new TimeSpan());
-                fillingSplitTime.GameTime = existingTime.GameTime.GetValueOrDefault(new TimeSpan());
-                CurrentState.Run[i].SplitTime = fillingSplitTime;
+        private void CheckAutoFieldsAndStartingSegmentIndex()
+        {
+            if (CurrentState.Run.AutoStartTimer)
+            {
+                CurrentState.Run.Offset = CurrentState.Run.GetSplitTimeOfLastTimedSegment();
+            }
+
+            if (CurrentState.Run.AutoSegmentIndex)
+            {
+                CurrentState.Run.StartingSegmentIndex = CurrentState.Run.GetIndexOfFirstUntimedSegment();
+            }
+
+            if (CurrentState.Run.StartingSegmentIndex != 0)
+            {
+                FillInSplitHistory(CurrentState.Run.StartingSegmentIndex);
+                CurrentState.CurrentSplitIndex = CurrentState.Run.StartingSegmentIndex;
+            }
+            else if (CurrentState.Run.StartingSegmentIndex != -1)
+            {
+                CurrentState.CurrentSplitIndex = 0;
             }
         }
 

@@ -373,8 +373,7 @@ namespace LiveSplit.View
         {
             if (checkBoxAutoStartTimer.Checked) {
                 tbxTimeOffset.ReadOnly = true;
-                tbxTimeOffset.Text = TimeFormatter.Format(GetLastSplitTime());
-                Offset = TimeFormatter.Format(GetLastSplitTime());
+                tbxTimeOffset.Text = Offset = TimeFormatter.Format(Run.GetSplitTimeOfLastTimedSegment());
             }
             else
             {
@@ -387,40 +386,14 @@ namespace LiveSplit.View
         {
             if (checkBoxAutoSegmentIndex.Checked) {
                 tbxSegmentIndex.ReadOnly = true;
-                tbxSegmentIndex.Text = GetIndexOfFirstUntimedSegment().ToString();
-                StartingSegmentIndex = GetIndexOfFirstUntimedSegment();
+                StartingSegmentIndex = Run.GetIndexOfFirstUntimedSegment();
+                tbxSegmentIndex.Text = StartingSegmentIndex.ToString();
             }
             else
             {
                 tbxSegmentIndex.ReadOnly = false;
             }
             RaiseRunEdited();
-        }
-
-        private int GetIndexOfFirstUntimedSegment()
-        {
-            int returnIndex = 0;
-            for (int i = 0; i < CurrentState.Run.Count(); i++)
-            {
-                if (CurrentState.Run[i].PersonalBestSplitTime.Equals(default(Time)))
-                {
-                    returnIndex = i;
-                    break;
-                }
-            }
-
-            return returnIndex;
-        }
-
-        private TimeSpan GetLastSplitTime()
-        {
-            int indexOfFirstUntimedSegment = GetIndexOfFirstUntimedSegment();
-            if (indexOfFirstUntimedSegment < 1)
-            {
-                return new TimeSpan();
-            }
-
-            return CurrentState.Run[indexOfFirstUntimedSegment - 1].PersonalBestSplitTime.RealTime.GetValueOrDefault(new TimeSpan());
         }
 
         void runGrid_SelectionChanged(object sender, EventArgs e)
