@@ -1859,6 +1859,18 @@ namespace LiveSplit.View
 
             CurrentState.Run.FixSplits();
 
+            if (CurrentState.CurrentPhase == TimerPhase.Paused) {
+                DontRedraw = true;
+                var updatePausedTimeResult = MessageBox.Show(this, "The current run has been paused. Would you like to update your start timer to the paused time (" + CurrentState.TimePausedAt + ")?", "Update Start Timer?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DontRedraw = false;
+                if (updatePausedTimeResult == DialogResult.Yes)
+                {
+                    Model.SetPausedOffset(CurrentState.TimePausedAt);
+                }
+                else if (updatePausedTimeResult == DialogResult.Cancel)
+                    return false;
+            }
+
             var result = DialogResult.No;
 
             if (promptPBMessage && ((CurrentState.CurrentPhase == TimerPhase.Ended

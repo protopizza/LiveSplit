@@ -136,6 +136,12 @@ namespace LiveSplit.View
             set { Run.AutoSegmentIndex = value; RaiseRunEdited(); }
         }
 
+        public bool UsePausedOffset
+        {
+            get { return Run.UsePausedOffset; }
+            set { Run.UsePausedOffset = value; RaiseRunEdited(); }
+        }
+
         public int NumTotalDesiredSegments { get; set; }
 
         private class ParsingResults
@@ -228,6 +234,7 @@ namespace LiveSplit.View
             checkBoxAutoStartTimer.DataBindings.Add("Checked", this, "AutoStartTimer");
             tbxSegmentIndex.DataBindings.Add("Text", this, "StartingSegmentIndex");
             checkBoxAutoSegmentIndex.DataBindings.Add("Checked", this, "AutoSegmentIndex");
+            checkBoxUsePausedOffset.DataBindings.Add("Checked", this, "UsePausedOffset");
             numTotalDesiredSegments.DataBindings.Add("Value", this, "NumTotalDesiredSegments");
 
             picGameIcon.Image = GameIcon;

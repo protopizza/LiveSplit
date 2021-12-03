@@ -3308,6 +3308,66 @@ namespace LiveSplitCore
             return result;
         }
         /// <summary>
+        /// Custom value.
+        /// </summary>
+        public bool AutoStartTimer()
+        {
+            if (this.ptr == IntPtr.Zero)
+            {
+                throw new ObjectDisposedException("this");
+            }
+            var result = LiveSplitCoreNative.Run_auto_start_timer(this.ptr) != 0;
+            return result;
+        }
+        /// <summary>
+        /// Custom value.
+        /// </summary>
+        public uint StartingSegmentIndex()
+        {
+            if (this.ptr == IntPtr.Zero)
+            {
+                throw new ObjectDisposedException("this");
+            }
+            var result = LiveSplitCoreNative.Run_starting_segment_index(this.ptr);
+            return result;
+        }
+        /// <summary>
+        /// Custom value.
+        /// </summary>
+        public bool AutoSegmentIndex()
+        {
+            if (this.ptr == IntPtr.Zero)
+            {
+                throw new ObjectDisposedException("this");
+            }
+            var result = LiveSplitCoreNative.Run_auto_segment_index(this.ptr) != 0;
+            return result;
+        }
+        /// <summary>
+        /// Custom value.
+        /// </summary>
+        public bool UsePausedOffset()
+        {
+            if (this.ptr == IntPtr.Zero)
+            {
+                throw new ObjectDisposedException("this");
+            }
+            var result = LiveSplitCoreNative.Run_use_paused_offset(this.ptr) != 0;
+            return result;
+        }
+        /// <summary>
+        /// Custom value.
+        /// </summary>
+        public TimeSpanRef PausedOffset()
+        {
+            if (this.ptr == IntPtr.Zero)
+            {
+                throw new ObjectDisposedException("this");
+            }
+            var result = new TimeSpanRef(LiveSplitCoreNative.Run_paused_offset(this.ptr));
+            return result;
+        }
+        /// <summary>
         /// Returns the amount of segments stored in this Run.
         /// </summary>
         public long Len()

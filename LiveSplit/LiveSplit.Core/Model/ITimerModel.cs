@@ -28,6 +28,7 @@ namespace LiveSplit.Model
         void Reset();
         void Reset(bool updateSplits);
         void ResetAndSetAttemptAsPB();
+        void SetPausedOffset(TimeSpan targetTime);
         void Pause();
         void UndoAllPauses();
         void ScrollUp();

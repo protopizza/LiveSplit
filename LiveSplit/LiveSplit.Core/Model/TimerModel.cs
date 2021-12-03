@@ -287,6 +287,11 @@ namespace LiveSplit.Model
             }
         }
 
+        public void SetPausedOffset(TimeSpan targetTime)
+        {
+            CurrentState.Run.PausedOffset = targetTime;
+        }
+
         private void SetRunAsPB()
         {
             CurrentState.Run.ImportSegmentHistory();
@@ -309,6 +314,10 @@ namespace LiveSplit.Model
             if (CurrentState.Run.AutoStartTimer)
             {
                 CurrentState.Run.Offset = CurrentState.Run.GetSplitTimeOfLastTimedSegment();
+            }
+            if (CurrentState.Run.UsePausedOffset)
+            {
+                CurrentState.Run.Offset += CurrentState.Run.PausedOffset;
             }
 
             if (CurrentState.Run.AutoSegmentIndex)

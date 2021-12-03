@@ -131,5 +131,7 @@ namespace LiveSplit.Model
         public void InitializeGameTime() => InternalModel.InitializeGameTime();
 
         public void ResetAndSetAttemptAsPB() => InternalModel.ResetAndSetAttemptAsPB();
+
+        public void SetPausedOffset(TimeSpan targetTime) => InternalModel.SetPausedOffset(targetTime);
     }
 }

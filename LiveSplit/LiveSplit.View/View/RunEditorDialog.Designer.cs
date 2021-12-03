@@ -85,6 +85,7 @@
             this.cleanSumOfBestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.iRunBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.iSegmentBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.checkBoxUsePausedOffset = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.runGrid)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picGameIcon)).BeginInit();
@@ -169,6 +170,7 @@
             this.tableLayoutPanel1.Controls.Add(this.label4, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.tbxAttempts, 3, 3);
             this.tableLayoutPanel1.Controls.Add(this.checkBoxAutoStartTimer, 5, 4);
+            this.tableLayoutPanel1.Controls.Add(this.checkBoxUsePausedOffset, 5, 3);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -755,6 +757,20 @@
             // 
             this.iSegmentBindingSource.DataSource = typeof(LiveSplit.Model.ISegment);
             // 
+            // checkBoxUsePausedOffset
+            // 
+            this.checkBoxUsePausedOffset.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.checkBoxUsePausedOffset.AutoSize = true;
+            this.checkBoxUsePausedOffset.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.tableLayoutPanel1.SetColumnSpan(this.checkBoxUsePausedOffset, 2);
+            this.checkBoxUsePausedOffset.Location = new System.Drawing.Point(436, 84);
+            this.checkBoxUsePausedOffset.Margin = new System.Windows.Forms.Padding(10, 3, 10, 3);
+            this.checkBoxUsePausedOffset.Name = "checkBoxUsePausedOffset";
+            this.checkBoxUsePausedOffset.Size = new System.Drawing.Size(115, 17);
+            this.checkBoxUsePausedOffset.TabIndex = 29;
+            this.checkBoxUsePausedOffset.Text = "Use Paused Offset";
+            this.checkBoxUsePausedOffset.UseVisualStyleBackColor = true;
+            // 
             // RunEditorDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -841,5 +857,6 @@
         private System.Windows.Forms.NumericUpDown numTotalDesiredSegments;
         private System.Windows.Forms.Button btnPopulateSegments;
         private System.Windows.Forms.CheckBox checkBoxAutoStartTimer;
+        private System.Windows.Forms.CheckBox checkBoxUsePausedOffset;
     }
 }

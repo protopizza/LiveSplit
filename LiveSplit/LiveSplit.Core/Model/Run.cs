@@ -84,6 +84,10 @@ namespace LiveSplit.Model
 
         public bool AutoSegmentIndex { get; set; }
 
+        public bool UsePausedOffset { get; set; }
+
+        public TimeSpan PausedOffset { get; set; }
+
         public AutoSplitter AutoSplitter { get; set; }
         public XmlElement AutoSplitterSettings { get; set; }
 
@@ -179,6 +183,8 @@ namespace LiveSplit.Model
                 AutoStartTimer = AutoStartTimer,
                 StartingSegmentIndex = StartingSegmentIndex,
                 AutoSegmentIndex = AutoSegmentIndex,
+                UsePausedOffset = UsePausedOffset,
+                PausedOffset = PausedOffset,
                 HasChanged = HasChanged,
                 FilePath = FilePath,
                 CustomComparisons = new List<string>(CustomComparisons),

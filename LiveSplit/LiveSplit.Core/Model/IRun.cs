@@ -24,6 +24,10 @@ namespace LiveSplit.Model
 
         bool AutoSegmentIndex { get; set; }
 
+        bool UsePausedOffset { get; set; }
+
+        TimeSpan PausedOffset { get; set; }
+
         AutoSplitter AutoSplitter { get; set; }
         XmlElement AutoSplitterSettings { get; set; }
 
