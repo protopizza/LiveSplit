@@ -30,7 +30,7 @@ namespace LiveSplit.Options.SettingsFactories
                             GlobalHotkeysEnabled = false,
                             DeactivateHotkeysForOtherPrograms = false,
                             DoubleTapPrevention = true,
-                            AllowGamepadsAsHotkeys = false,
+                            AllowGamepadsAsHotkeys = true,
                             HotkeyDelay = 0f
                         }
                     }
@@ -41,6 +41,7 @@ namespace LiveSplit.Options.SettingsFactories
                 AgreedToSRLRules = false,
                 SimpleSumOfBest = false,
                 RaceProvider = ComponentManager.RaceProviderFactories.Values.ToList().Select(x => x.CreateSettings()).ToList(),
+                RefreshRate = 40,
                 ComparisonGeneratorStates = new Dictionary<string, bool>()
                 {
                     { BestSegmentsComparisonGenerator.ComparisonName, true },
