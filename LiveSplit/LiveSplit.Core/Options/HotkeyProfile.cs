@@ -1,5 +1,7 @@
 ﻿using LiveSplit.Model.Input;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using static LiveSplit.UI.SettingsHelper;
 
@@ -86,7 +88,12 @@ namespace LiveSplit.Options
             hotkeyProfile.DeactivateHotkeysForOtherPrograms = ParseBool(element["DeactivateHotkeysForOtherPrograms"], false);
             hotkeyProfile.DoubleTapPrevention = ParseBool(element["DoubleTapPrevention"], true);
             hotkeyProfile.HotkeyDelay = ParseFloat(element["HotkeyDelay"], 0f);
-            hotkeyProfile.AllowGamepadsAsHotkeys = ParseBool(element["AllowGamepadsAsHotkeys"], true);
+
+            hotkeyProfile.AllowGamepadsAsHotkeys = ParseBool(element["AllowGamepadsAsHotkeys"], false);
+            if (version < new Version(1, 8, 17) && !hotkeyProfile.AnyGamepadKeys())
+            {
+                hotkeyProfile.AllowGamepadsAsHotkeys = false;
+            }
 
             return hotkeyProfile;
         }
@@ -162,6 +169,22 @@ namespace LiveSplit.Options
                 DoubleTapPrevention = DoubleTapPrevention,
                 AllowGamepadsAsHotkeys = AllowGamepadsAsHotkeys
             };
+        }
+
+        private bool AnyGamepadKeys()
+        {
+            var buttons = new List<KeyOrButton> {
+                SplitKey,
+                ResetKey,
+                SkipKey,
+                UndoKey,
+                PauseKey,
+                ToggleGlobalHotkeys,
+                SwitchComparisonPrevious,
+                SwitchComparisonNext
+            };
+
+            return buttons.Any(button => button?.IsButton ?? false);
         }
     }
 }
