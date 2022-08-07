@@ -212,7 +212,6 @@ namespace LiveSplit.View
             UpdateRecentSplits();
             UpdateRecentLayouts();
 
-            InTimerOnlyMode = false;
             var timerOnlyRun = new StandardRunFactory().Create(ComparisonGeneratorsFactory);
 
             IRun run = timerOnlyRun;
@@ -273,6 +272,10 @@ namespace LiveSplit.View
                 Log.Error(e);
                 Layout = new StandardLayoutFactory().Create(CurrentState);
             }
+
+            InTimerOnlyMode = run == timerOnlyRun;
+            if (InTimerOnlyMode)
+                SetInTimerOnlyMode();
 
             CurrentState.LayoutSettings = Layout.Settings;
             CreateAutoSplitter();
@@ -1818,6 +1821,7 @@ namespace LiveSplit.View
         {
             using (var splitDialog = new OpenFileDialog())
             {
+                splitDialog.Filter = "LiveSplit Splits (*.lss)|*.lss|All files (*.*)|*.*";
                 IsInDialogMode = true;
                 try
                 {
