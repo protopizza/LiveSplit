@@ -49,6 +49,30 @@ LiveSplit is written in C# 7 with Visual Studio and uses .NET Framework 4.6.1. T
 
 Simply open the project with Visual Studio and it should be able to compile and run without any further configuration.
 
+## Common Compiling Issues
+1. Could not build Codaxy.Xlio due to sgen.exe not being found. Open LiveSplit\\Libs\\xlio\\Source\\Codaxy.Xlio\\Codaxy.Xlio.csproj in order to edit where it looks for this path. Look for &lt;SGen...&gt; where it defines the attribute "ToolPath". Look on your computer to find the proper path. It is typically down some path such as "C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\x.xA...". Find the version you want to use and bin folder with sgen.exe in it and replace the path in the .csproj file.
+2. No submodules pulled in when you fork/clone the repo which causes the project not to build. There are two ways to remedy this:
+ - Cloning for the first time: `git clone --recursive git://repo/repo.git`
+ - If already cloned, execute this in the root directory: `git submodule update --init --recursive`
+
+## Auto Splitters
+
+The documentation for how to develop, test, and submit an Auto Splitter can be found here:
+
+[Auto Splitters Documentation](https://github.com/LiveSplit/LiveSplit.AutoSplitters/blob/master/README.md)
+
+## Releasing
+
+1. Update versions of any components that changed to match the new LiveSplit version.
+2. Create a Git tag for the new version.
+3. Download `LiveSplit_Build` from the GitHub Actions build for the latest commit on `master`.
+4. Create a GitHub release for the new version, and upload the LiveSplit build ZIP file with the correct filename (e.g. `LiveSplit_1.8.21.zip`).
+    - Create releases for [`LiveSplit.Counter`](https://github.com/LiveSplit/LiveSplit.Counter) and [`LiveSplit.Server`](https://github.com/LiveSplit/LiveSplit.Server) if necessary.
+5. Modify files in [the update folder of LiveSplit.github.io](https://github.com/LiveSplit/LiveSplit.github.io/tree/master/update) and commit the changes:
+    - Copy changed files from the downloaded LiveSplit build ZIP file to the update folder.
+    - Add new versions to the update XMLs for (`update.xml`, `update.updater.xml`, and the update XMLs for any components that changed).
+    - Update the version on the [downloads page](https://github.com/LiveSplit/LiveSplit.github.io/blob/master/downloads.md).
+
 ## License
 
 The MIT License (MIT)
