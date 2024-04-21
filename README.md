@@ -1,4 +1,4 @@
-﻿<h1> <img src="https://raw.githubusercontent.com/LiveSplit/LiveSplit/master/LiveSplit/Resources/Icon.png" alt="LiveSplit" height="42" width="45" align="top"/> LiveSplit</h1>
+﻿<h1> <img src="https://raw.githubusercontent.com/LiveSplit/LiveSplit/master/res/Icon.svg" alt="LiveSplit" height="42" align="top"/> LiveSplit</h1>
 
 LiveSplit is a timer program for speedrunners that is both easy to use and full of features.
 
@@ -38,21 +38,26 @@ Further details of the features below.
 
 ### Other Notes
 
-1. This only works using the "Real Time" method of timing.
-1. Settings based around the `Auto Start Timer`, `Auto Segment Index`, and `Start Segment Index` aren't saved across closing and opening the program, as they don't get stored into your actual splits files. This allows your splits files to be compatible with the main version of LiveSplit.
+ 1. [Fork](https://github.com/LiveSplit/LiveSplit/fork) the project
+ 2. Clone your forked repo: `git clone https://github.com/YourUsername/LiveSplit.git`
+ 3. Create your feature/bugfix branch: `git checkout -b new-feature`
+ 4. Commit your changes to your new branch: `git commit -am 'Add a new feature'`
+ 5. Push to the branch: `git push origin new-feature`
+ 6. Create a new Pull Request!
 
 ## Compiling
 
-LiveSplit is written in C# 7 with Visual Studio and uses .NET Framework 4.6.1. To compile LiveSplit, you need one of these versions of Visual Studio:
- - Visual Studio 2017 Community Edition
- - Visual Studio 2017
+LiveSplit uses .NET Framework 4.6.1. To compile LiveSplit, you need the following components installed:
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [.NET Framework 4.6.1 Developer Pack](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net461)
 
-Simply open the project with Visual Studio and it should be able to compile and run without any further configuration.
+After cloning, simply run `dotnet build LiveSplit.sln` from the root of the repository.
+
+To use Visual Studio, you must install a version that supports the .NET SDK version you installed. At the time of writing, the most recent version is [Visual Studio 2022](https://visualstudio.microsoft.com/vs/community).
 
 ## Common Compiling Issues
-1. Could not build Codaxy.Xlio due to sgen.exe not being found. Open LiveSplit\\Libs\\xlio\\Source\\Codaxy.Xlio\\Codaxy.Xlio.csproj in order to edit where it looks for this path. Look for &lt;SGen...&gt; where it defines the attribute "ToolPath". Look on your computer to find the proper path. It is typically down some path such as "C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\x.xA...". Find the version you want to use and bin folder with sgen.exe in it and replace the path in the .csproj file.
-2. No submodules pulled in when you fork/clone the repo which causes the project not to build. There are two ways to remedy this:
- - Cloning for the first time: `git clone --recursive git://repo/repo.git`
+1. No submodules pulled in when you fork/clone the repo which causes the project not to build. There are two ways to remedy this:
+ - Cloning for the first time: `git clone --recursive https://github.com/LiveSplit/LiveSplit.git`
  - If already cloned, execute this in the root directory: `git submodule update --init --recursive`
 
 ## Auto Splitters
@@ -61,16 +66,132 @@ The documentation for how to develop, test, and submit an Auto Splitter can be f
 
 [Auto Splitters Documentation](https://github.com/LiveSplit/LiveSplit.AutoSplitters/blob/master/README.md)
 
+## The LiveSplit Server
+
+The internal LiveSplit Server allows for other programs and other computers to control LiveSplit. The server can accept connections over either a named pipe located at `\\<hostname>\pipe\LiveSplit` (`.` is the hostname if the client and server are on the same computer) or over TCP/IP.
+
+### Control
+
+The named pipe is always open while LiveSplit is running but the TCP server **MUST** be started before programs can talk to it (Right click on LiveSplit -> Control -> Start TCP Server). You **MUST** manually start it each time you launch LiveSplit.
+
+### Settings
+
+#### Server Port
+
+**Server Port** is the door (one of thousands) on your computer that this program sends data through. Default is 16834. This should be fine for most people, but depending on network configurations, some ports may be blocked. See also https://en.wikipedia.org/wiki/Port_%28computer_networking%29
+
+### Known Uses
+
+- **Android LiveSplit Remote**: https://github.com/Ekelbatzen/LiveSplit.Remote.Android
+- **SplitNotes**: https://github.com/joelnir/SplitNotes
+- **Autosplitter Remote Client**: https://github.com/RavenX8/LiveSplit.Server.Client
+
+Made something cool? Consider getting it added to this list.
+
+### Commands
+
+Commands are case sensitive and end with a new line. You can provide parameters by using a space after the command and sending the parameters afterwards (`<command><space><parameters><newline>`).
+
+Some commands will respond with data and some will not. Every response ends with a newline character.
+
+All times and deltas returned by the server are formatted according to [C#'s Constant Format Specifier](https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-timespan-format-strings#the-constant-c-format-specifier). The server will accept times in the following format: `[-][[[d.]hh:]mm:]ss[.fffffff]`. The hours field can be greated than 23, even if days are present. Individual fields do not need to be padded with zeroes. Any command that returns a time or a string can return a single hyphen `-` to indicate a "null" or invalid value. Commands that take a COMPARISON or a NAME take plain strings that may include spaces. Because it is used as a delimiter to mark the end of a command, newline characters may not appear anywhere within a command.
+
+Commands that generate no response:
+
+- startorsplit
+- split
+- unsplit
+- skipsplit
+- pause
+- resume
+- reset
+- starttimer
+- setgametime TIME
+- setloadingtimes TIME
+- addloadingtimes TIME
+- pausegametime
+- unpausegametime
+- alwayspausegametime
+- setcomparison COMPARISON
+- switchto realtime
+- switchto gametime
+- setsplitname INDEX NAME
+- setcurrentsplitname NAME
+
+Commands that return a time:
+
+- getdelta
+- getdelta COMPARISON
+- getlastsplittime
+- getcomparisonsplittime
+- getcurrentrealtime
+- getcurrentgametime
+- getcurrenttime
+- getfinaltime
+- getfinaltime COMPARISON
+- getpredictedtime COMPARISON
+- getbestpossibletime
+
+Commands that return an int:
+
+- getsplitindex  
+(returns -1 if the timer is not running)
+
+Commands that return a string:
+
+- getcurrentsplitname  
+- getprevioussplitname
+- getcurrenttimerphase
+- ping  
+(always returns `pong`)
+
+Commands are defined at `ProcessMessage` in "CommandServer.cs".
+
+### Example Clients
+
+#### Python
+
+```python
+import socket
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect(("localhost", 16834))
+s.send(b"starttimer\n")
+```
+
+#### Java 7+
+
+```java
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+
+public class MainTest {
+    public static void main(String[] args) throws IOException {
+        Socket socket = new Socket("localhost", 16834);
+        PrintWriter writer = new PrintWriter(socket.getOutputStream());
+        writer.println("starttimer");
+        writer.flush();
+        socket.close();
+    }
+}
+```
+
+#### Node.js
+
+Node.js client implementation available here: https://github.com/satanch/node-livesplit-client
+
 ## Releasing
 
 1. Update versions of any components that changed (create a Git tag and update the factory file for each component) to match the new LiveSplit version.
 2. Create a Git tag for the new version.
-3. Download `LiveSplit_Build` from the GitHub Actions build for the latest commit on `master`.
+3. Download `LiveSplit_Build` and `UpdateManagerExe` from the GitHub Actions build for the new Git tag.
 4. Create a GitHub release for the new version, and upload the LiveSplit build ZIP file with the correct filename (e.g. `LiveSplit_1.8.21.zip`).
-    - Create releases for [`LiveSplit.Counter`](https://github.com/LiveSplit/LiveSplit.Counter) and [`LiveSplit.Server`](https://github.com/LiveSplit/LiveSplit.Server) if necessary.
 5. Modify files in [the update folder of LiveSplit.github.io](https://github.com/LiveSplit/LiveSplit.github.io/tree/master/update) and commit the changes:
-    - Copy changed files from the downloaded LiveSplit build ZIP file to the update folder.
+    - Copy changed files from the downloaded LiveSplit build ZIP file to the [update folder](https://github.com/LiveSplit/LiveSplit.github.io/tree/master/update).
+    - Copy changed files from the download Update Manager ZIP file to replace [`UpdateManagerV2.exe`](https://github.com/LiveSplit/LiveSplit.github.io/blob/master/update/UpdateManagerV2.exe) and [`UpdateManagerV2.exe.config`](https://github.com/LiveSplit/LiveSplit.github.io/blob/master/update/UpdateManagerV2.exe.config).
     - Add new versions to the update XMLs for (`update.xml`, `update.updater.xml`, and the update XMLs for any components that changed).
+    - Modify the [DLL](https://github.com/therungg/LiveSplit.TheRun/blob/main/Components/LiveSplit.TheRun.dll) and [update XML](https://github.com/therungg/LiveSplit.TheRun/blob/main/update.LiveSplit.TheRun.xml) for LiveSplit.TheRun in its repo.
     - Update the version on the [downloads page](https://github.com/LiveSplit/LiveSplit.github.io/blob/master/downloads.md).
 
 ## License
