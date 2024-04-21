@@ -4,9 +4,9 @@ LiveSplit is a timer program for speedrunners that is both easy to use and full 
 
 This is a fork of LiveSplit that adds functionality to start at any desired split with a desired initial time. This was designed in mind for usage by SMW/Kaizo players. In conjunction with my [ExitCounter component](https://github.com/protopizza/LiveSplit.ExitCounter), it makes timing your progress of a first playthrough of any game easy to manage over multiple gaming sessions. It's how I track my time over on my stream at https://www.twitch.tv/protopizza.
 
-<img src="https://raw.githubusercontent.com/protopizza/LiveSplit/master/LiveSplit/Resources/KaizoSplit/Guide-1.png"/>
+<img src="https://raw.githubusercontent.com/protopizza/LiveSplit/master/res/KaizoSplit/Guide-1.png"/>
 
-<img src="https://raw.githubusercontent.com/protopizza/LiveSplit/master/LiveSplit/Resources/KaizoSplit/Guide-2.png"/>
+<img src="https://raw.githubusercontent.com/protopizza/LiveSplit/master/res/KaizoSplit/Guide-2.png"/>
 
 You can see the main project and documentation for LiveSplit [here](https://github.com/LiveSplit/LiveSplit).
 
