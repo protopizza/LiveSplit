@@ -1,14 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutDir>..\..\bin\$(Configuration)</OutDir>
     <RootNamespace>LiveSplit</RootNamespace>
-    <TargetFramework>net4.6.1</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
 
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
-    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,8 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\lib\SpeedrunComSharp\src\SpeedrunComSharp\SpeedrunComSharp.csproj" />
-    <ProjectReference Include="..\UpdateManager\UpdateManager.csproj" />
+    <ProjectReference Include="$(LibPath)\SpeedrunComSharp\src\SpeedrunComSharp\SpeedrunComSharp.csproj" />
+    <ProjectReference Include="$(SrcPath)\UpdateManager\UpdateManager.csproj" />
+    <ProjectReference Include="$(LibPath)\CustomFontDialog\CustomFontDialog\CustomFontDialog.csproj" />
+    <ProjectReference Include="$(LibPath)\WinForms Color Picker\WinFormsColor\WinFormsColor.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,9 +35,6 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="WindowsBase" />
-
-    <Reference Include="..\..\lib\CustomFontDialog\CustomFontDialog.dll" />
-    <Reference Include="..\..\lib\WinForms Color Picker\WinFormsColor.dll" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -50,9 +46,9 @@
         git rev-parse --abbrev-ref HEAD &gt; "$(MSBuildProjectDirectory)\Updates\GitInfo\branch.txt"
         git rev-parse HEAD &gt; "$(MSBuildProjectDirectory)\Updates\GitInfo\revision.txt"
       ) else (
-        echo 13.3.7-0&gt;  "$(MSBuildProjectDirectory)\Updates\GitInfo\version.txt"
-        echo no-git&gt; "$(MSBuildProjectDirectory)\Updates\GitInfo\branch.txt"
-        echo deadbeef&gt; "$(MSBuildProjectDirectory)\Updates\GitInfo\revision.txt"
+        touch "$(MSBuildProjectDirectory)\Updates\GitInfo\version.txt"
+        touch "$(MSBuildProjectDirectory)\Updates\GitInfo\branch.txt"
+        touch "$(MSBuildProjectDirectory)\Updates\GitInfo\revision.txt"
       )
       EXIT 0
     </PreBuildEvent>

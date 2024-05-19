@@ -1,13 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutDir>..\..\bin\$(Configuration)</OutDir>
     <RootNamespace>LiveSplit</RootNamespace>
-    <TargetFramework>net4.6.1</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
 
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
-    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,9 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\lib\SpeedrunComSharp\src\SpeedrunComSharp\SpeedrunComSharp.csproj" />
-    <ProjectReference Include="..\LiveSplit.Core\LiveSplit.Core.csproj" />
-    <ProjectReference Include="..\UpdateManager\UpdateManager.csproj" />
+    <ProjectReference Include="$(LibPath)\SpeedrunComSharp\src\SpeedrunComSharp\SpeedrunComSharp.csproj" />
+    <ProjectReference Include="$(SrcPath)\LiveSplit.Core\LiveSplit.Core.csproj" />
+    <ProjectReference Include="$(SrcPath)\UpdateManager\UpdateManager.csproj" />
+    <ProjectReference Include="$(LibPath)\CustomFontDialog\CustomFontDialog\CustomFontDialog.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,8 +29,6 @@
 
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-
-    <Reference Include="..\..\lib\CustomFontDialog\CustomFontDialog.dll" />
   </ItemGroup>
 
 </Project>

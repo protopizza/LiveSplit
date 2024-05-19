@@ -1,6 +1,5 @@
 ﻿<h1> <img src="https://raw.githubusercontent.com/LiveSplit/LiveSplit/master/res/Icon.svg" alt="LiveSplit" height="42" align="top"/> LiveSplit</h1>
 
-LiveSplit is a timer program for speedrunners that is both easy to use and full of features.
 
 This is a fork of LiveSplit that adds functionality to start at any desired split with a desired initial time. This was designed in mind for usage by SMW/Kaizo players. In conjunction with my [ExitCounter component](https://github.com/protopizza/LiveSplit.ExitCounter), it makes timing your progress of a first playthrough of any game easy to manage over multiple gaming sessions. It's how I track my time over on my stream at https://www.twitch.tv/protopizza.
 
@@ -39,7 +38,7 @@ Further details of the features below.
 ### Other Notes
 
  1. [Fork](https://github.com/LiveSplit/LiveSplit/fork) the project
- 2. Clone your forked repo: `git clone https://github.com/YourUsername/LiveSplit.git`
+ 2. Clone your forked repo: `git clone --recursive https://github.com/YourUsername/LiveSplit.git`
  3. Create your feature/bugfix branch: `git checkout -b new-feature`
  4. Commit your changes to your new branch: `git commit -am 'Add a new feature'`
  5. Push to the branch: `git push origin new-feature`

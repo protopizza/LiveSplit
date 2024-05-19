@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Xml;
 
 namespace LiveSplit.Model
@@ -11,6 +12,9 @@ namespace LiveSplit.Model
     {
         public static AutoSplitterFactory Instance { get; protected set; }
         public IDictionary<string, AutoSplitter> AutoSplitters { get; set; }
+
+        public const string AutoSplittersXmlUrl = "https://raw.githubusercontent.com/LiveSplit/LiveSplit.AutoSplitters/master/LiveSplit.AutoSplitters.xml";
+        public const string AutoSplittersXmlFile = "LiveSplit.AutoSplitters.xml";
 
         static AutoSplitterFactory()
         {
@@ -34,6 +38,7 @@ namespace LiveSplit.Model
             if (AutoSplitters != null)
                 return;
 
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
             var document = DownloadAutoSplitters();
 
             if (document != null)
@@ -100,14 +105,14 @@ namespace LiveSplit.Model
             var autoSplitters = new XmlDocument();
             try
             {
-                autoSplitters.Load("https://raw.githubusercontent.com/LiveSplit/LiveSplit.AutoSplitters/master/LiveSplit.AutoSplitters.xml");
-                autoSplitters.Save("LiveSplit.AutoSplitters.xml");
+                autoSplitters.Load(AutoSplittersXmlUrl);
+                autoSplitters.Save(AutoSplittersXmlFile);
             }
             catch (Exception ex)
             {
                 Log.Error(ex);
-                if (File.Exists("LiveSplit.AutoSplitters.xml"))
-                    autoSplitters.Load("LiveSplit.AutoSplitters.xml");
+                if (File.Exists(AutoSplittersXmlFile))
+                    autoSplitters.Load(AutoSplittersXmlFile);
                 else
                     return null;
             }

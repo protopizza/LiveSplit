@@ -5,6 +5,7 @@
 .fleet/
 
 # Build artifacts
+artifacts/
 bin/
 obj/
 publish/
@@ -20,6 +21,8 @@ GitInfo/
 
 **/x64/target/
 **/x86/target/
+
+LiveSplit.AutoSplitters.xml
 
 # Operating System Files
 # =========================
