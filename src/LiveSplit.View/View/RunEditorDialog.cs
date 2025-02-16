@@ -153,11 +153,6 @@ public partial class RunEditorDialog : Form
         public bool Parsed { get; set; }
         public object Value { get; set; }
 
-        private class ParsingResults
-        {
-            public bool Parsed { get; set; }
-            public object Value { get; set; }
-
         public ParsingResults(bool parsed, object value)
         {
             Parsed = parsed;
