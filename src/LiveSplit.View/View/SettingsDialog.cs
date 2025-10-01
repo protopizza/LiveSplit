@@ -51,6 +51,11 @@ public partial class SettingsDialog : Form
         get => Settings.HotkeyProfiles[SelectedHotkeyProfile].AllowGamepadsAsHotkeys;
         set => Settings.HotkeyProfiles[SelectedHotkeyProfile].AllowGamepadsAsHotkeys = value;
     }
+    public bool EnableDPIAwareness
+    {
+        get => Settings.EnableDPIAwareness;
+        set => Settings.EnableDPIAwareness = value;
+    }
 
     public int RefreshRate
     {
@@ -83,13 +88,22 @@ public partial class SettingsDialog : Form
         chkWarnOnReset.DataBindings.Add("Checked", Settings, "WarnOnReset");
         cbxRaceViewer.DataBindings.Add("SelectedItem", this, "RaceViewer");
         chkAllowGamepads.DataBindings.Add("Checked", this, "AllowGamepadsAsHotkeys");
+        chkEnableDPIAwareness.DataBindings.Add("Checked", this, "EnableDPIAwareness");
 
         txtRefreshRate.DataBindings.Add("Text", this, "RefreshRate");
         txtServerPort.DataBindings.Add("Text", this, "ServerPort");
+        cbxServerStartup.SelectedIndex = (int)Settings.ServerStartup;
 
         UpdateDisplayedHotkeyValues();
         RefreshRemoveButton();
         RefreshLogOutButton();
+
+        if (Environment.OSVersion.Version.Major < LiveSplit.Options.Settings.DPI_AWARENESS_OS_MIN_VERSION)
+        {
+            settings.EnableDPIAwareness = false;
+            chkEnableDPIAwareness.Checked = false;
+            chkEnableDPIAwareness.Enabled = false;
+        }
     }
 
     private void InitializeHotkeyProfiles(string hotkeyProfile)
@@ -307,10 +321,23 @@ public partial class SettingsDialog : Form
     private void btnChooseComparisons_Click(object sender, EventArgs e)
     {
         var generatorStates = new Dictionary<string, bool>(Settings.ComparisonGeneratorStates);
-        DialogResult result = new ChooseComparisonsDialog() { ComparisonGeneratorStates = generatorStates }.ShowDialog(this);
+        int hcpHistorySize = Settings.HcpHistorySize;
+        int hcpNBestRuns = Settings.HcpNBestRuns;
+
+        var dialog = new ChooseComparisonsDialog()
+        {
+            ComparisonGeneratorStates = generatorStates,
+            HcpHistorySize = hcpHistorySize,
+            HcpNBestRuns = hcpNBestRuns
+        };
+
+        DialogResult result = dialog.ShowDialog(this);
+
         if (result == DialogResult.OK)
         {
-            Settings.ComparisonGeneratorStates = generatorStates;
+            Settings.ComparisonGeneratorStates = dialog.ComparisonGeneratorStates;
+            Settings.HcpHistorySize = dialog.HcpHistorySize;
+            Settings.HcpNBestRuns = dialog.HcpNBestRuns;
         }
     }
 
@@ -408,6 +435,14 @@ public partial class SettingsDialog : Form
         if (dialog.ShowDialog(this) == DialogResult.OK)
         {
             Settings.RaceProvider = newSettings;
+        }
+    }
+
+    private void cbxServerStartup_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (Enum.IsDefined(typeof(ServerStartupType), cbxServerStartup.SelectedIndex))
+        {
+            Settings.ServerStartup = (ServerStartupType)cbxServerStartup.SelectedIndex;
         }
     }
 }

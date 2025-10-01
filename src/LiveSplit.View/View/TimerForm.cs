@@ -68,8 +68,6 @@ public partial class TimerForm : Form
     private Image bakedBackground { get; set; }
 
     public CommandServer Server { get; set; }
-    public bool ServerStarted { get; protected set; } = false;
-    public bool WebSocketStarted { get; protected set; } = false;
 
     protected GraphicsCache GlobalCache { get; set; }
 
@@ -205,6 +203,7 @@ public partial class TimerForm : Form
         LayoutSaver = new XMLLayoutSaver();
         SettingsSaver = new XMLSettingsSaver();
         LoadSettings();
+        SetDPIAwareness();
 
         CurrentState.CurrentHotkeyProfile = Settings.HotkeyProfiles.First().Key;
 
@@ -318,6 +317,29 @@ public partial class TimerForm : Form
 
         Server = new CommandServer(CurrentState);
         Server.StartNamedPipe();
+        switch (Settings.ServerStartup)
+        {
+            case ServerStartupType.TCP:
+                Server.StartTcp();
+                break;
+            case ServerStartupType.Websocket:
+                Server.StartWs();
+                break;
+            case ServerStartupType.PreviousState:
+                switch (Settings.ServerState)
+                {
+                    case ServerStateType.TCP:
+                        Server.StartTcp();
+                        break;
+                    case ServerStateType.Websocket:
+                        Server.StartWs();
+                        break;
+                }
+
+                break;
+        }
+
+        UpdateServerMenuItems();
 
         new System.Timers.Timer(1000) { Enabled = true }.Elapsed += PerSecondTimer_Elapsed;
 
@@ -685,44 +707,58 @@ public partial class TimerForm : Form
         });
     }
 
-    private void ServerMenuItem_Click(object sender, EventArgs e)
+    private void UpdateServerMenuItems()
     {
-        if (ServerStarted)
+        Settings.ServerState = Server.ServerState;
+        switch (Server.ServerState)
         {
-            Server.StopTcp();
-            webSocketMenuItem.Enabled = true;
-
-            this.InvokeIfRequired(() => serverMenuItem.Text = "Start TCP Server");
+            case ServerStateType.Off:
+                tcpServerMenuItem.Enabled = true;
+                this.InvokeIfRequired(() => tcpServerMenuItem.Text = "Start TCP Server");
+                webSocketMenuItem.Enabled = true;
+                this.InvokeIfRequired(() => webSocketMenuItem.Text = "Start WebSocket Server");
+                break;
+            case ServerStateType.TCP:
+                tcpServerMenuItem.Enabled = true;
+                this.InvokeIfRequired(() => tcpServerMenuItem.Text = "Stop TCP Server");
+                webSocketMenuItem.Enabled = false;
+                this.InvokeIfRequired(() => webSocketMenuItem.Text = "Start WebSocket Server");
+                break;
+            case ServerStateType.Websocket:
+                tcpServerMenuItem.Enabled = false;
+                this.InvokeIfRequired(() => tcpServerMenuItem.Text = "Start TCP Server");
+                webSocketMenuItem.Enabled = true;
+                this.InvokeIfRequired(() => webSocketMenuItem.Text = "Stop WebSocket Server");
+                break;
         }
-        else
+    }
+
+    private void TCPServerMenuItem_Click(object sender, EventArgs e)
+    {
+        if (Server.ServerState == ServerStateType.Off)
         {
             Server.StartTcp();
-            webSocketMenuItem.Enabled = false;
-
-            this.InvokeIfRequired(() => serverMenuItem.Text = "Stop TCP Server");
+        }
+        else if (Server.ServerState == ServerStateType.TCP)
+        {
+            Server.StopTcp();
         }
 
-        ServerStarted = !ServerStarted;
+        UpdateServerMenuItems();
     }
 
     private void WebSocketMenuItem_Click(object sender, EventArgs e)
     {
-        if (WebSocketStarted)
-        {
-            Server.StopWs();
-            serverMenuItem.Enabled = true;
-
-            this.InvokeIfRequired(() => webSocketMenuItem.Text = "Start WebSocket Server");
-        }
-        else
+        if (Server.ServerState == ServerStateType.Off)
         {
             Server.StartWs();
-            serverMenuItem.Enabled = false;
-
-            this.InvokeIfRequired(() => webSocketMenuItem.Text = "Stop WebSocket Server");
+        }
+        else if (Server.ServerState == ServerStateType.Websocket)
+        {
+            Server.StopWs();
         }
 
-        WebSocketStarted = !WebSocketStarted;
+        UpdateServerMenuItems();
     }
 
     private void CurrentState_OnSkipSplit(object sender, EventArgs e)
@@ -947,47 +983,10 @@ public partial class TimerForm : Form
         var openFromURLMenuItem = new ToolStripMenuItem("From URL...");
         openFromURLMenuItem.Click += openSplitsFromURLMenuItem_Click;
         openSplitsMenuItem.DropDownItems.Add(openFromURLMenuItem);
-        var openFromSpeedrunComMenuItem = new ToolStripMenuItem("From Speedrun.com...");
-        openFromSpeedrunComMenuItem.Click += openFromSpeedrunComMenuItem_Click;
-        openSplitsMenuItem.DropDownItems.Add(openFromSpeedrunComMenuItem);
         openSplitsMenuItem.DropDownItems.Add(new ToolStripSeparator());
         var editSplitHistoryMenuItem = new ToolStripMenuItem("Edit History");
         editSplitHistoryMenuItem.Click += editSplitHistoryMenuItem_Click;
         openSplitsMenuItem.DropDownItems.Add(editSplitHistoryMenuItem);
-    }
-
-    private void openFromSpeedrunComMenuItem_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            TopMost = false;
-            IsInDialogMode = true;
-
-            var runImporter = new SpeedrunComRunImporter();
-            IRun run = runImporter.Import(this);
-
-            if (run != null)
-            {
-                if (!WarnUserAboutSplitsSave())
-                {
-                    return;
-                }
-
-                if (!WarnAndRemoveTimerOnly(true))
-                {
-                    return;
-                }
-
-                run.HasChanged = true;
-                SetRun(run);
-                CurrentState.CallRunManuallyModified();
-            }
-        }
-        finally
-        {
-            TopMost = Layout.Settings.AlwaysOnTop;
-            IsInDialogMode = false;
-        }
     }
 
     private void editSplitHistoryMenuItem_Click(object sender, EventArgs e)
@@ -2796,6 +2795,21 @@ public partial class TimerForm : Form
         Settings = new StandardSettingsFactory().Create();
     }
 
+    private void SetDPIAwareness()
+    {
+        if (Environment.OSVersion.Version.Major >= LiveSplit.Options.Settings.DPI_AWARENESS_OS_MIN_VERSION && Settings.EnableDPIAwareness)
+        {
+            try
+            {
+                SetProcessDPIAware();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+        }
+    }
+
     private void closeSplitsMenuItem_Click(object sender, EventArgs e)
     {
         CloseSplits();
@@ -3130,7 +3144,7 @@ public partial class TimerForm : Form
         hotkeysMenuItem.Checked = Settings.HotkeyProfiles[CurrentState.CurrentHotkeyProfile].GlobalHotkeysEnabled;
 
         controlMenuItem.DropDownItems.Add(new ToolStripSeparator());
-        controlMenuItem.DropDownItems.Add(serverMenuItem);
+        controlMenuItem.DropDownItems.Add(tcpServerMenuItem);
         controlMenuItem.DropDownItems.Add(webSocketMenuItem);
 
         IEnumerable<UI.Components.IComponent> components = Layout.Components;
@@ -3213,4 +3227,7 @@ public partial class TimerForm : Form
             e.Effect = DragDropEffects.None;
         }
     }
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern bool SetProcessDPIAware();
 }

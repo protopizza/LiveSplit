@@ -44,6 +44,9 @@ public class StandardSettingsFactory : ISettingsFactory
             RaceProvider = ComponentManager.RaceProviderFactories.Values.ToList().Select(x => x.CreateSettings()).ToList(),
             RefreshRate = 40,
             ServerPort = 16834,
+            ServerStartup = ServerStartupType.Off,
+            ServerState = ServerStateType.Off,
+            EnableDPIAwareness = false,
             ComparisonGeneratorStates = new Dictionary<string, bool>()
             {
                 { BestSegmentsComparisonGenerator.ComparisonName, true },
@@ -53,8 +56,11 @@ public class StandardSettingsFactory : ISettingsFactory
                 { WorstSegmentsComparisonGenerator.ComparisonName, false},
                 { PercentileComparisonGenerator.ComparisonName, false },
                 { LatestRunComparisonGenerator.ComparisonName, false },
+                { HCPComparisonGenerator.ComparisonName, false },
                 { NoneComparisonGenerator.ComparisonName, false }
-            }
+            },
+            HcpHistorySize = 20,
+            HcpNBestRuns = 8
         };
     }
 }

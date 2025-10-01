@@ -33,6 +33,8 @@ public partial class RunEditorDialog : Form
     private const int BESTSEGMENTINDEX = 4;
     private const int CUSTOMCOMPARISONSINDEX = 5;
 
+    private const int MAXADDITIONSPERADDRANGE = 1000;
+
     public IRun Run { get; set; }
     public LiveSplitState CurrentState { get; set; }
     protected BindingList<ISegment> SegmentList { get; set; }
@@ -40,6 +42,7 @@ public partial class RunEditorDialog : Form
     protected IList<TimeSpan?> SegmentTimeList { get; set; }
     protected bool IsInitialized = false;
     protected Time PreviousPersonalBestTime;
+    private readonly CancellationTokenSource FillCbxGameTaskToken = new();
 
     protected bool IsGridTab => tabControl.SelectedTab == RealTime || tabControl.SelectedTab == GameTime;
     protected bool IsMetadataTab => tabControl.SelectedTab == Metadata;
@@ -334,6 +337,7 @@ public partial class RunEditorDialog : Form
 
     private void FillCbxGameName()
     {
+        var token = FillCbxGameTaskToken.Token;
         Task.Factory.StartNew(() =>
         {
             try
@@ -342,18 +346,7 @@ public partial class RunEditorDialog : Form
                 if (cachedGameNames != null)
                 {
                     gameNames = cachedGameNames.ToArray();
-                    this.InvokeIfRequired(() =>
-                    {
-                        Application.DoEvents();
-                        try
-                        {
-                            cbxGameName.Items.AddRange(gameNames);
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error(ex);
-                        }
-                    });
+                    AddCbxGameNamesIncremental(gameNames, token);
                 }
                 else
                 {
@@ -372,28 +365,47 @@ public partial class RunEditorDialog : Form
                     .SelectMany(x => x)
                     .GroupBy(x => x.Value, x => x.Key);
                     cbxGameName.GetAllItemsForText = x => SearchForGameName(x);
-                    if (newGameNames.Length > 0)
-                    {
-                        this.InvokeIfRequired(() =>
-                        {
-                            Application.DoEvents();
-                            try
-                            {
-                                cbxGameName.Items.AddRange(newGameNames);
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Error(ex);
-                            }
-                        });
-                    }
+
+                    AddCbxGameNamesIncremental(newGameNames, token);
                 }
             }
             catch (Exception ex)
             {
                 Log.Error(ex);
             }
-        });
+        }, token);
+    }
+
+    private void AddCbxGameNamesIncremental(string[] gamesToAdd, CancellationToken token)
+    {
+        if (gamesToAdd.Length > 0)
+        {
+            this.InvokeIfRequired(() =>
+            {
+                try
+                {
+                    int currentIdx = 0;
+                    int count;
+                    while (currentIdx < gamesToAdd.Count() && !token.IsCancellationRequested)
+                    {
+                        Application.DoEvents();
+                        count = Math.Min(gamesToAdd.Count() - currentIdx, MAXADDITIONSPERADDRANGE);
+                        string[] partialGamesToAdd = new string[count];
+                        for (int i = 0; i < count; ++i)
+                        {
+                            partialGamesToAdd[i] = gamesToAdd[currentIdx + i];
+                        }
+
+                        cbxGameName.Items.AddRange(partialGamesToAdd);
+                        currentIdx += count;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                }
+            });
+        }
     }
 
     private void RefreshCategoryAutoCompleteList()
@@ -1870,12 +1882,6 @@ public partial class RunEditorDialog : Form
         ImportClick(runImporter);
     }
 
-    private void fromSpeedruncomToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        var runImporter = new SpeedrunComRunImporter();
-        ImportClick(runImporter);
-    }
-
     private void ImportClick(IRunImporter importer)
     {
         string name = importer.ImportAsComparison(Run, this);
@@ -2016,6 +2022,11 @@ public partial class RunEditorDialog : Form
     private void cbxGameName_Validated(object sender, EventArgs e)
     {
         GameName = cbxGameName.Text;
+    }
+
+    private void RunEditorDialog_FormClosing(object sender, FormClosingEventArgs e)
+    {
+        FillCbxGameTaskToken.Cancel();
     }
 }
 
